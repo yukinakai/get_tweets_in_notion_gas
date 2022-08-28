@@ -1,7 +1,7 @@
 function notionApiHeader() {
   const NOTION_API_KEY: string = PropertiesService.getScriptProperties().getProperty("NOTION_API_KEY");
   const headers = {
-    'Authorization': "Bearer " + NOTION_API_KEY,
+    'Authorization': `Bearer ${NOTION_API_KEY}`,
     'Content-Type': 'application/json',
     'Notion-Version': '2021-08-16',
   }
