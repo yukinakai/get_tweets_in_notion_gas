@@ -1,3 +1,5 @@
 function main() {
-  getTweetsInNotion()
+  // getTweetsInNotion()
+  getLikedTweetsInTwitter()
 }
+
