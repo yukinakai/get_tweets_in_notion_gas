@@ -22,15 +22,24 @@ function getLikedTweetsInTwitter() {
   }[] = [];
   while(has_more) {
     const url = endpoint + '?' + addParamsGetLikedTweetsUrl(params);
-    const response = UrlFetchApp.fetch(url, getLikedTweetsInTwitterOptions());
-    const response_code = response.getResponseCode();
-    const response_content = JSON.parse(response.getContentText());
+    let response_code: number;
+    let response_content: object;
+    try{
+      const response = UrlFetchApp.fetch(url, getLikedTweetsInTwitterOptions());
+      response_code = response.getResponseCode();
+      response_content = JSON.parse(response.getContentText());
+    } catch(error) {
+      response_code = 999;
+      response_content = error.message;
+    }
     if(response_code!=200) {
-      console.error({
+      const msg = {
         'status': response_code,
         'action': 'get liked tweets in twitter',
         'message': response_content
-      });
+      };
+      console.log(msg);
+      postMessageSlack('<!channel> ' + JSON.stringify(msg));
       throw new Error();
     }
     const result_count = response_content['meta']['result_count'];

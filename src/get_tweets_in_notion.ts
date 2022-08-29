@@ -5,9 +5,16 @@ function getTweetsInNotion() {
   let has_more: boolean = true;
   const tweets: string[] = []
   while(has_more) {
-    const response = UrlFetchApp.fetch(url, notionApiOptions('post', payload))
-    const response_code = response.getResponseCode()
-    const response_content = JSON.parse(response.getContentText());
+    let response_code: number;
+    let response_content: object;
+    try {
+      const response = UrlFetchApp.fetch(url, notionApiOptions('post', payload))
+      response_code = response.getResponseCode()
+      response_content = JSON.parse(response.getContentText());
+    } catch(error) {
+      response_code = 999;
+      response_content = error.message;
+    }
     if(response_code!=200) {
       console.error({
         'status': response_code,
