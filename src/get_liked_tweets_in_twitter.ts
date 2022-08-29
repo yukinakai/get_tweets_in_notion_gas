@@ -9,7 +9,17 @@ function getLikedTweetsInTwitter() {
     'media.fields': 'url'
   }
   let has_more: boolean = true;
-  const tweets: { [key: string ]: string|string[] }[] = [];
+  const tweets: {
+    tweeted_at: string,
+    tweet_id: string,
+    text: string,
+    author_id: string,
+    author_name: string,
+    author_username: string,
+    author_profile_image_url: string,
+    referenced_tweets: object[],
+    attached_media_urls: string[]
+  }[] = [];
   while(has_more) {
     const url = endpoint + '?' + addParamsGetLikedTweetsUrl(params)
     const res = JSON.parse(UrlFetchApp.fetch(url, getLikedTweetsInTwitterOptions()).getContentText());
@@ -17,7 +27,7 @@ function getLikedTweetsInTwitter() {
     if(result_count == 0) {
       has_more = false
     } else {
-      const _tweets: { [key: string ]: string|string[] }[] = formatLikedTweetsFromTwitter(res)
+      const _tweets = formatLikedTweetsFromTwitter(res)
       tweets.concat(_tweets);
       params['pagination_token'] = res['meta']['next_token'];
     };

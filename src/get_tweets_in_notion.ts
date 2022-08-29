@@ -5,7 +5,7 @@ function getTweetsInNotion() {
   let has_more: boolean = true;
   const tweets: string[] = []
   while(has_more) {
-    const res = JSON.parse(UrlFetchApp.fetch(url, getTweetsInNotionOptions(payload)).getContentText());
+    const res = JSON.parse(UrlFetchApp.fetch(url, notionApiOptions('post', payload)).getContentText());
     for(let result of res['results']) {
       tweets.push(result['properties']['Tweet_id']['rich_text'][0]['plain_text'])
     }
@@ -13,13 +13,4 @@ function getTweetsInNotion() {
     payload['start_cursor'] = res['next_cursor']
   }
   return tweets
-}
-
-function getTweetsInNotionOptions(payload: { [name: string]: number|string }) {
-  const options: GoogleAppsScript.URL_Fetch.URLFetchRequestOptions = {
-    'method': 'post',
-    'headers': notionApiHeader(),
-    'payload': JSON.stringify(payload)
-  }
-  return options
 }

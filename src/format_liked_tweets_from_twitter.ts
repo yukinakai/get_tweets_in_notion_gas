@@ -1,12 +1,12 @@
-function formatLikedTweetsFromTwitter(res) {
-  const users: { [key: string]: {key: string}} = {};
+function formatLikedTweetsFromTwitter(res: object) {
+  const users: { [key: string]: object } = {};
   for(let user of res['includes']['users']) {
     const user_id: string = user['id'];
     delete user['id'];
     users[user_id] = user
   }
 
-  const media: { [key: string]: {key: string}} = {};
+  const media: { [key: string]: object } = {};
   if('media' in res['includes']){
     for(let file of res['includes']['media']){
       const media_key = file['media_key'];
@@ -15,7 +15,7 @@ function formatLikedTweetsFromTwitter(res) {
     }
   }
 
-  const tweets: { [key: string]: {key: string}} = {};
+  const tweets: { [key: string]: object } = {};
   if('tweets' in res['includes']){
     for(let tweet of res['includes']['tweets']){
       const tweet_id = tweet['id'];
@@ -24,9 +24,29 @@ function formatLikedTweetsFromTwitter(res) {
     }
   }
 
-  const data: { [key: string ]: string|string[] }[] = [];
+  const data = [];
   for(let datum of res['data']){
-    const row:{ [key: string ]: string|string[] } = {};
+    const row: {
+      tweeted_at: string,
+      tweet_id: string,
+      text: string,
+      author_id: string,
+      author_name: string,
+      author_username: string,
+      author_profile_image_url: string,
+      referenced_tweets: object[],
+      attached_media_urls: string[]
+    } = {
+      tweeted_at: "",
+      tweet_id: "",
+      text: "",
+      author_id: "",
+      author_name: "",
+      author_username: "",
+      author_profile_image_url: "",
+      referenced_tweets: [],
+      attached_media_urls: []
+    };
     row['tweeted_at'] = datum['created_at'];
     row['tweet_id'] = datum['id'];
     row['text'] = datum['text'];
