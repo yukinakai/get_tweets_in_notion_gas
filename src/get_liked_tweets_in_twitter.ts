@@ -21,15 +21,25 @@ function getLikedTweetsInTwitter() {
     attached_media_urls: string[]
   }[] = [];
   while(has_more) {
-    const url = endpoint + '?' + addParamsGetLikedTweetsUrl(params)
-    const res = JSON.parse(UrlFetchApp.fetch(url, getLikedTweetsInTwitterOptions()).getContentText());
-    const result_count = res['meta']['result_count'];
+    const url = endpoint + '?' + addParamsGetLikedTweetsUrl(params);
+    const response = UrlFetchApp.fetch(url, getLikedTweetsInTwitterOptions());
+    const response_code = response.getResponseCode();
+    const response_content = JSON.parse(response.getContentText());
+    if(response_code!=200) {
+      console.error({
+        'status': response_code,
+        'action': 'get liked tweets in twitter',
+        'message': response_content
+      });
+      throw new Error();
+    }
+    const result_count = response_content['meta']['result_count'];
     if(result_count == 0) {
       has_more = false
     } else {
-      const _tweets = formatLikedTweetsFromTwitter(res)
+      const _tweets = formatLikedTweetsFromTwitter(response_content)
       tweets.concat(_tweets);
-      params['pagination_token'] = res['meta']['next_token'];
+      params['pagination_token'] = response_content['meta']['next_token'];
     };
   }
   return tweets;

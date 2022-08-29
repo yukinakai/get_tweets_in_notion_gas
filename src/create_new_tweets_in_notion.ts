@@ -1,4 +1,4 @@
-function createNewTweetsToNotion(
+function createNewTweetsInNotion(
   tweets_in_notion: string[],
   tweets_in_twitter: {
     tweeted_at: string,
@@ -17,7 +17,17 @@ function createNewTweetsToNotion(
         continue;
       }
       const payload = formatNewTweetForNotion(tweet)
-      UrlFetchApp.fetch(url, notionApiOptions('post', payload));
+      const response = UrlFetchApp.fetch(url, notionApiOptions('post', payload));
+      const response_code = response.getResponseCode();
+      const response_content = JSON.parse(response.getContentText());
+      if(response_code!=200) {
+        console.error({
+          'status': response_code,
+          'action': 'create tweet in notion',
+          'message': response_content
+        });
+        throw new Error();
+      }
     }
 }
 
