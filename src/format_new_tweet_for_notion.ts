@@ -16,7 +16,7 @@ function formatNewTweetForNotion(tweet: {
   const children = [];
   if('attached_media_urls' in tweet) {
     payload['properties']['With_media'] = {"type": "checkbox", "checkbox": true};
-    for(let media_url of tweet['attached_media_url']) {
+    for(let media_url of tweet['attached_media_urls']) {
       if(media_url == 'video') {
         payload['properties']['Video'] = {"type": "select", "select": {"name": "未対応"}};
         children.push(notionApiPayloadExternalVideo(media_url))

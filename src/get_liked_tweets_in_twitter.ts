@@ -9,7 +9,7 @@ function getLikedTweetsInTwitter() {
     'media.fields': 'url'
   }
   let has_more: boolean = true;
-  const tweets: {
+  let tweets: {
     tweeted_at: string,
     tweet_id: string,
     text: string,
@@ -38,7 +38,7 @@ function getLikedTweetsInTwitter() {
       has_more = false
     } else {
       const _tweets = formatLikedTweetsFromTwitter(response_content)
-      tweets.concat(_tweets);
+      tweets = tweets.concat(_tweets);
       params['pagination_token'] = response_content['meta']['next_token'];
     };
   }
