@@ -17,16 +17,24 @@ function createNewTweetsInNotion(
         continue;
       }
       const payload = formatNewTweetForNotion(tweet)
-      const response = UrlFetchApp.fetch(url, notionApiOptions('post', payload));
-      const response_code = response.getResponseCode();
-      const response_content = JSON.parse(response.getContentText());
+      let response_code: number;
+      let response_content: object;
+      try{
+        const response = UrlFetchApp.fetch(url, notionApiOptions('post', payload));
+        response_code = response.getResponseCode();
+        response_content = JSON.parse(response.getContentText());
+      } catch(error) {
+        response_code = 999;
+        response_content = error.message;
+      }
       if(response_code!=200) {
-        console.error({
+        const msg = {
           'status': response_code,
           'action': 'create tweet in notion',
           'message': response_content
-        });
-        throw new Error();
+        };
+        console.log(msg);
+        postMessageSlack('<!channel> ' + JSON.stringify(msg));
       }
     }
 }

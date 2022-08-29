@@ -1,8 +1,10 @@
 function main() {
-  console.log({
+  let msg = {
     'status': 'success',
     'action': 'script start'
-  });
+  };
+  console.log(msg);
+  postMessageSlack(JSON.stringify(msg));
 
   const tweets_in_notion= getTweetsInNotion();
   console.log({
@@ -17,8 +19,10 @@ function main() {
   });
 
   createNewTweetsInNotion(tweets_in_notion, tweets_in_twitter);
-  console.log({
+  msg = {
     'status': 'success',
     'action': 'script end'
-  });
+  };
+  console.log(msg);
+  postMessageSlack(JSON.stringify(msg));
 }
