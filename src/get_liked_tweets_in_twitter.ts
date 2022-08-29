@@ -9,17 +9,37 @@ function getLikedTweetsInTwitter() {
     'media.fields': 'url'
   }
   let has_more: boolean = true;
-  const tweets: { [key: string ]: string|string[] }[] = [];
+  let tweets: {
+    tweeted_at: string,
+    tweet_id: string,
+    text: string,
+    author_id: string,
+    author_name: string,
+    author_username: string,
+    author_profile_image_url: string,
+    referenced_tweets: object[],
+    attached_media_urls: string[]
+  }[] = [];
   while(has_more) {
-    const url = endpoint + '?' + addParamsGetLikedTweetsUrl(params)
-    const res = JSON.parse(UrlFetchApp.fetch(url, getLikedTweetsInTwitterOptions()).getContentText());
-    const result_count = res['meta']['result_count'];
+    const url = endpoint + '?' + addParamsGetLikedTweetsUrl(params);
+    const response = UrlFetchApp.fetch(url, getLikedTweetsInTwitterOptions());
+    const response_code = response.getResponseCode();
+    const response_content = JSON.parse(response.getContentText());
+    if(response_code!=200) {
+      console.error({
+        'status': response_code,
+        'action': 'get liked tweets in twitter',
+        'message': response_content
+      });
+      throw new Error();
+    }
+    const result_count = response_content['meta']['result_count'];
     if(result_count == 0) {
       has_more = false
     } else {
-      const _tweets: { [key: string ]: string|string[] }[] = formatLikedTweetsFromTwitter(res)
-      tweets.concat(_tweets);
-      params['pagination_token'] = res['meta']['next_token'];
+      const _tweets = formatLikedTweetsFromTwitter(response_content)
+      tweets = tweets.concat(_tweets);
+      params['pagination_token'] = response_content['meta']['next_token'];
     };
   }
   return tweets;
