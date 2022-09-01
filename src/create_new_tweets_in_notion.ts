@@ -31,9 +31,10 @@ function createNewTweetsInNotion(
         const msg = {
           'status': response_code,
           'action': 'create tweet in notion',
-          'message': response_content
+          'message': response_content,
+          'paylopad': payload
         };
-        console.log(msg);
+        console.error(msg);
         postMessageSlack('<!channel> ' + JSON.stringify(msg));
       }
     }

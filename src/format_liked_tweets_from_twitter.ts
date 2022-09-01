@@ -71,9 +71,9 @@ function formatLikedTweetsFromTwitter(res: object) {
       const attachments = [];
       for(let media_key of datum['attachments']['media_keys']){
         let attached_media_url: string;
-        try{
+        if('url' in media[media_key]) {
           attached_media_url =  media[media_key]['url']
-        } catch{
+        } else {
           attached_media_url =  'video'
         }
         attachments.push(attached_media_url);
