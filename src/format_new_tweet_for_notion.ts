@@ -14,7 +14,7 @@ function formatNewTweetForNotion(tweet: {
   payload['parent'] = {'database_id': NOTION_DATABASE_ID};
 
   const children = [];
-  if('attached_media_urls' in tweet) {
+  if(tweet['attached_media_urls'].length > 0) {
     payload['properties']['With_media'] = {"type": "checkbox", "checkbox": true};
     for(let media_url of tweet['attached_media_urls']) {
       if(media_url == 'video') {
@@ -25,7 +25,7 @@ function formatNewTweetForNotion(tweet: {
       };
     };
   };
-  if('referenced_tweets' in tweet) {
+  if(tweet['referenced_tweets'].length > 0) {
     for(let referenced_tweet in tweet['referenced_tweets']) {
       children.push(notionApiPayloadEmbed(referenced_tweet))
     };
