@@ -33,5 +33,6 @@ function postMessageSlack(body: string) {
   }
   if(response_code!=200) {
     console.error(log_content);
+    throw new Error(JSON.stringify(log_content, null, '\t'));
   }
 }

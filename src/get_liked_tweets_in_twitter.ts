@@ -2,7 +2,7 @@ function getLikedTweetsInTwitter() {
   const TWITTER_USER_ID: string = PropertiesService.getScriptProperties().getProperty("TWITTER_USER_ID");
   const endpoint: string = `https://api.twitter.com/2/users/${TWITTER_USER_ID}/liked_tweets`;
   const params = {
-    'max_results': '100',
+    // 'max_results': '100',
     'expansions': 'attachments.media_keys,author_id,referenced_tweets.id,referenced_tweets.id.author_id',
     'tweet.fields': 'attachments,author_id,created_at,id,text,referenced_tweets',
     'user.fields': 'name,username,profile_image_url',
@@ -39,8 +39,9 @@ function getLikedTweetsInTwitter() {
         'message': response_content
       };
       console.log(msg);
-      postMessageSlack('<!channel> ' + JSON.stringify(msg));
-      throw new Error();
+      const msg_string = JSON.stringify(msg, null, '\t')
+      postMessageSlack('<!channel> ' + msg_string);
+      throw new Error(msg_string);
     }
     const result_count = response_content['meta']['result_count'];
     if(result_count == 0) {
@@ -49,6 +50,7 @@ function getLikedTweetsInTwitter() {
       const _tweets = formatLikedTweetsFromTwitter(response_content)
       tweets = tweets.concat(_tweets);
       params['pagination_token'] = response_content['meta']['next_token'];
+      Utilities.sleep(100)
     };
   }
   return tweets;

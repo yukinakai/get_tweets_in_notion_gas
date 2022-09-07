@@ -16,12 +16,15 @@ function getTweetsInNotion() {
       response_content = error.message;
     }
     if(response_code!=200) {
-      console.error({
+      const msg = {
         'status': response_code,
         'action': 'get tweets in notion',
         'message': response_content
-      });
-      throw new Error();
+      }
+      console.error(msg);
+      const msg_string = JSON.stringify(msg, null, '\t')
+      postMessageSlack('<!channel> ' + msg_string);
+      throw new Error(msg_string);
     }
     for(let result of response_content['results']) {
       tweets.push(result['properties']['Tweet_id']['rich_text'][0]['plain_text'])

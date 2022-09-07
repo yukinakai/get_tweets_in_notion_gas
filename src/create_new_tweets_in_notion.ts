@@ -35,7 +35,7 @@ function createNewTweetsInNotion(
           'paylopad': payload
         };
         console.error(msg);
-        postMessageSlack('<!channel> ' + JSON.stringify(msg));
+        postMessageSlack('<!channel> ' + JSON.stringify(msg, null, '\t'));
       }
     }
 }
