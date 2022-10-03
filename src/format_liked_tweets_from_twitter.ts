@@ -20,7 +20,7 @@ function formatLikedTweetsFromTwitter(res: object) {
     for(let tweet of res['includes']['tweets']){
       const tweet_id = tweet['id'];
       delete tweet['id'];
-      tweets[tweet_id] = tweet_id
+      tweets[tweet_id] = tweet
     }
   }
 
@@ -61,11 +61,17 @@ function formatLikedTweetsFromTwitter(res: object) {
     if('referenced_tweets' in datum){
       const referenced_tweets = [];
       for(let referenced_tweet of datum['referenced_tweets']){
+        if (referenced_tweet['type']=='replied_to') {
+          continue
+        }
         const tweet_id = referenced_tweet['id'];
-        const author_id = tweets[tweet_id]['author_id'];
+        let author_id: string;
+        author_id = tweets[tweet_id]['author_id'];
         referenced_tweets.push(`https://twitter.com/${author_id}/status/${tweet_id}`)
       }
-      row['referenced_tweets'] = referenced_tweets;
+      if(referenced_tweets.length>0){
+        row['referenced_tweets'] = referenced_tweets;
+      }
     }
     if('attachments' in datum){
       const attachments = [];
