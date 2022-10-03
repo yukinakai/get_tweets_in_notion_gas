@@ -1,4 +1,13 @@
 function main() {
+  try {
+    favTweetToNotion()
+  } catch(e) {
+    console.error(e)
+    postMessageSlack('<!channel> unknown error\n' + e);
+  }
+}
+
+function favTweetToNotion() {
   let msg = {
     'status': 'success',
     'action': 'script start'
