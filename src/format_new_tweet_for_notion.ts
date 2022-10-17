@@ -18,8 +18,8 @@ function formatNewTweetForNotion(tweet: {
     payload['properties']['With_media'] = {"type": "checkbox", "checkbox": true};
     for(let media_url of tweet['attached_media_urls']) {
       if(media_url == 'video') {
-        payload['properties']['Video'] = {"type": "select", "select": {"name": "未対応"}};
         children.push(notionApiPayloadExternalVideo(media_url))
+        children.push(notionApiPayloadEmbed(payload['properties']['URL']['url']))
       } else {
         children.push(notionApiPayloadExternalImage(media_url))
       };
